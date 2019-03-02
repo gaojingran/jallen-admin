@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alifd/next": "^1.13.2",
-    "@alifd/theme-3": "0.0.11",
+    "@alifd/theme-6516": "^0.1.0",
     "@rematch/core": "^1.0.6",
     "classnames": "^2.2.6",
     "moment": "^2.24.0",

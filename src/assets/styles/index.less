@@ -1,5 +1,5 @@
 
-@import '~@alifd/theme-3/dist/next.css';
+@import '~@alifd/theme-6516/dist/next.css';
 @import './custom.less';
 
 html, body, #root {
@@ -14,6 +14,18 @@ html, body, #root {
 
 .hidden {
   overflow: hidden;
+}
+
+.block {
+  display: block;
+}
+
+.inline {
+  display: inline;
+}
+
+.mg-auto {
+  margin: 0 auto;
 }
 
 .mt8 {
@@ -84,6 +96,12 @@ html, body, #root {
   text-align: center;
 }
 
+.text-ellipsisl {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsisl
+}
+
 .clear-fix:after{
   content:" ";
   display:block;
@@ -100,6 +118,14 @@ html, body, #root {
 .v-middle {
   display: inline-block;
   vertical-align: middle;
+}
+
+.pos-rel {
+  position: relative;
+}
+
+.pos-abs {
+  position: absolute;
 }
 
 .bg-light {

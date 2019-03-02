@@ -11,6 +11,7 @@ module.exports = override(
     ["@babel/plugin-proposal-decorators", { legacy: true }],
   ),
   addWebpackAlias({
+    "$S": resolve('src'),
     "$C": resolve('src/components'),
     "$A": resolve('src/assets'),
     "$M": resolve('src/models'),
