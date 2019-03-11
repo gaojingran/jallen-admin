@@ -1,12 +1,13 @@
 
 const path = require('path');
-const { override, fixBabelImports, addBabelPlugins, addLessLoader, addWebpackAlias } = require('customize-cra');
+const { override, fixBabelImports, addBabelPlugins, addLessLoader, addWebpackAlias, disableEsLint } = require('customize-cra');
 
 const resolve = (p) => {
   return path.resolve(__dirname, p);
 };
 
 module.exports = override(
+  disableEsLint(),
   ...addBabelPlugins(
     ["@babel/plugin-proposal-decorators", { legacy: true }],
   ),
@@ -17,6 +18,7 @@ module.exports = override(
     "$M": resolve('src/models'),
     "$P": resolve('src/pages'),
     "$U": resolve('src/utils'),
+    "$H": resolve('src/hoc'),
   }),
   addLessLoader({
     strictMath: true,
