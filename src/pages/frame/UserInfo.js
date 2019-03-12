@@ -38,9 +38,7 @@ export default ({ userInfo, handleLogout }) => (
           <Icon size="small" type="socialsnapchat" className="mr8" />
           <span className="v-middle">{userInfo.account}</span>
         </p>
-        <p className="subtitle mt0 mb0">
-          {userInfo.introduce}
-        </p>
+        <p className="subtitle mt0 mb0">{userInfo.introduce}</p>
       </Col>
     </Row>
   </div>

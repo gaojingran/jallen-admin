@@ -8,6 +8,7 @@
     "@rematch/core": "^1.0.6",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "lottie-web": "^5.4.4",
     "moment": "^2.24.0",
     "omit": "^1.0.1",
     "react": "^16.8.3",

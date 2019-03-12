@@ -59,7 +59,7 @@ class Frame extends React.PureComponent {
             <Balloon
               align="rt"
               alignEdge
-              triggerType="click"
+              triggerType="hover"
               closable={false}
               trigger={this._avatar()}
               style={{ width: 400 }}

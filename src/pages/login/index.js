@@ -12,16 +12,17 @@ import {
 import { storage, session } from "$U/storage";
 import { getSessionToken } from "$U/utils";
 import config from "$S/config";
-import spaceIcon from "$A/img/space.svg";
+// import spaceIcon from "$A/img/space.svg";
 import logo from "$A/img/logo.png";
 import withAsync from "$H/withAsync";
 import Register from "$C/Register";
+import LottieIcon from "$C/Lottie";
 import styles from "./.module.less";
 
 const { Row, Col } = Grid;
 const FormItem = Form.Item;
 const copyrightStyle = cls(["text-ellipsisl", "text-center", styles.copyright]);
-const bgStyle = cls(styles["space-img"], "fr");
+// const bgStyle = cls(styles["space-img"], "fr");
 const logoStyle = cls([styles.logo, "mr16"]);
 
 export default
@@ -105,7 +106,12 @@ class Login extends React.PureComponent {
           style={{ marginLeft: 0 }}
         >
           <Col span={12}>
-            <img className={bgStyle} src={spaceIcon} alt="背景图" />
+            <div className="fr">
+              <LottieIcon width={480} height={480} name="rocket" />
+            </div>
+            {/**
+             *  <img className={bgStyle} src={spaceIcon} alt="背景图" />
+             */}
           </Col>
           <Col span={12}>
             <div className={styles.form}>
