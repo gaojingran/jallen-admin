@@ -1,7 +1,16 @@
 import React from "react";
 import cls from "classnames";
-import { Grid, Form, Input, Button, Icon, Checkbox } from "@alifd/next";
-import { storage } from "$U/storage";
+import {
+  Grid,
+  Form,
+  Input,
+  Button,
+  Icon,
+  Checkbox,
+  Message
+} from "@alifd/next";
+import { storage, session } from "$U/storage";
+import { getSessionToken } from "$U/utils";
 import config from "$S/config";
 import spaceIcon from "$A/img/space.svg";
 import logo from "$A/img/logo.png";
@@ -23,15 +32,30 @@ class Login extends React.PureComponent {
     this.isCacheAccount = storage.get(config.sessionKey.isCacheAccount);
     this.cacheAccount = storage.get(config.sessionKey.cacheAccount);
     this.state = {
+      isAutoLogin: storage.get(config.sessionKey.isAutoLogin),
       register: false,
       loading: false
     };
+    this.checkIsLogin();
   }
+
+  // 检查是否已经登录
+  checkIsLogin = () => {
+    if (getSessionToken()) {
+      this.props.history.goBack();
+    }
+  };
 
   // 记住账号
   handleCacheAccount = v => {
     this.cacheAccount = v;
     storage.set(config.sessionKey.isCacheAccount, v);
+  };
+
+  // 自动登录
+  handleAutoLogin = v => {
+    this.setState({ isAutoLogin: v });
+    storage.set(config.sessionKey.isAutoLogin, v);
   };
 
   // 登录
@@ -40,12 +64,21 @@ class Login extends React.PureComponent {
       this.setState({ loading: true });
       try {
         const { data } = await this.props.ajax("login", val);
+        // 缓存账号
         if (this.isCacheAccount) {
           storage.set(config.sessionKey.cacheAccount, val.account);
+        } else {
+          session.set(config.sessionKey.cacheAccount, val.account);
         }
         // 缓存token
-        storage.set(config.sessionKey.token, data.token);
-        this.props.history.replace("/");
+        if (this.state.isAutoLogin) {
+          storage.set(config.sessionKey.token, data.token);
+        } else {
+          session.set(config.sessionKey.token, data.token);
+        }
+        const nextPath =
+          this.props.location.state && this.props.location.state.from;
+        this.props.history.replace(nextPath || "/");
       } catch (err) {
         this.props.ajaxNotify(err);
         this.setState({ loading: false });
@@ -62,7 +95,7 @@ class Login extends React.PureComponent {
   };
 
   render() {
-    const { loading, register } = this.state;
+    const { loading, register, isAutoLogin } = this.state;
     return (
       <div className="full bg-dark pos-rel hidden flex">
         <Row
@@ -114,21 +147,39 @@ class Login extends React.PureComponent {
                   />
                 </FormItem>
                 <Row justify="space-between">
-                  <FormItem>
-                    <Checkbox
-                      onChange={this.handleCacheAccount}
-                      defaultChecked={this.isCacheAccount}
-                    >
-                      记住账号
-                    </Checkbox>
-                  </FormItem>
+                  <Row>
+                    <FormItem className="mr16">
+                      <Checkbox
+                        onChange={this.handleCacheAccount}
+                        defaultChecked={this.isCacheAccount}
+                      >
+                        记住账号
+                      </Checkbox>
+                    </FormItem>
+
+                    <FormItem>
+                      <Checkbox
+                        onChange={this.handleAutoLogin}
+                        checked={isAutoLogin}
+                      >
+                        自动登录
+                      </Checkbox>
+                    </FormItem>
+                  </Row>
+
                   <FormItem className="text-right">
                     <Button text onClick={this.showRegister}>
                       <Icon type="smile" /> 立即注册
                     </Button>
                   </FormItem>
                 </Row>
-                <FormItem>
+
+                <Message type="notice" visible={isAutoLogin} shape="toast">
+                  请勿在不安全设备上使用
+                  <span className="info-light-color"> 自动登录 </span>!
+                </Message>
+
+                <FormItem style={{ marginTop: isAutoLogin ? 16 : 0 }}>
                   <Form.Submit
                     validate
                     type="primary"

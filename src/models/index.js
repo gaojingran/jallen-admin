@@ -1,10 +1,10 @@
 
 
 import { init } from '@rematch/core';
-import count from './count';
+import user from './user';
 
 export default init({
   models: {
-    count,
+    user,
   }
 });

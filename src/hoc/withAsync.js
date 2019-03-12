@@ -1,11 +1,10 @@
-
-
-import React from 'react';
-import omit from 'omit';
-import { Message } from '@alifd/next';
-import axios from '$U/request';
-// import { storage } from '$U/storage';
-import config from '../config';
+import React from "react";
+import omit from "omit";
+import { Message } from "@alifd/next";
+import axios from "$U/request";
+import { storage, session } from "$U/storage";
+import { sysLogout } from "$U/utils";
+import config from "../config";
 
 const { ajaxAddress } = config;
 
@@ -24,27 +23,27 @@ export default function withAsync(Component) {
       Message.hide();
       while (this.httpDefers.length) {
         try {
-          this.httpDefers.pop().cancel('canceled');
+          this.httpDefers.pop().cancel("canceled");
         } catch (e) {
-          console.log('httpDefers:', e);
+          console.log("httpDefers:", e);
         }
       }
     }
 
     dispatchEnhance = () => {
-      if (this.props.dispatch && typeof this.props.dispatch === 'function') {
+      if (this.props.dispatch && typeof this.props.dispatch === "function") {
         return ({ type, payload = {} }) => {
           this.props.dispatch({
             type,
             payload: {
               ...payload,
               ajax: this.ajax,
-              ajaxNotify: this.ajaxNotify,
-            },
-          })
-        }
+              ajaxNotify: this.ajaxNotify
+            }
+          });
+        };
       }
-    }
+    };
 
     ajax = (key, data, config = {}) => {
       const cancel = config.cancelToken || axios.CancelToken.source();
@@ -53,33 +52,39 @@ export default function withAsync(Component) {
         this.httpDefers.push(cancel);
       }
       return axios({
-        method: data ? 'POST' : 'GET',
+        method: data ? "POST" : "GET",
         url: ajaxAddress[key],
         data: data,
         cancelToken: cancel.token,
-        ...omit(['cancelToken'], config),
+        ...omit(["cancelToken"], config)
       });
-    }
+    };
 
-    ajaxNotify = (err) => {
+    ajaxNotify = err => {
       const authError = err.code === 401;
       Message.show({
-        type: 'warning',
+        type: "warning",
         duration: authError ? 1000 * 60 : 3000,
         content: authError ? (
           <span className="v-middle">
-            用户信息验证失效,请<span className="link" onClick={this.goLogin}> 重新登录 </span>!
+            用户信息验证失效,请
+            <span className="link" onClick={this.goLogin}>
+              {" "}
+              重新登录{" "}
+            </span>
+            !
           </span>
         ) : (
           <span className="v-middle">{err.error || err.toString()}</span>
         )
       });
-    }
+    };
 
-    goLogin = (e) => {
+    goLogin = e => {
       e.preventDefault();
-      console.log(123)
-    }
+      const { history, location } = this.props;
+      sysLogout(history, location);
+    };
 
     render() {
       return (
@@ -87,8 +92,9 @@ export default function withAsync(Component) {
           {...this.props}
           ajax={this.ajax}
           ajaxNotify={this.ajaxNotify}
-          dispatch={this.dispatch} />
-      )
+          dispatch={this.dispatch}
+        />
+      );
     }
-  }
+  };
 }

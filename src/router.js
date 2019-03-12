@@ -3,7 +3,7 @@ import React from 'react';
 import Loadable from 'react-loadable';
 import Frame from './pages/frame';
 
-const Loading = () => <div>loading...</div>;
+const Loading = () => null;
 
 const Login = Loadable({
   loader: () => import('$P/login'),

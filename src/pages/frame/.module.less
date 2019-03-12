@@ -21,6 +21,7 @@
     border-radius: 100%;
     margin-left: auto;
     margin-right: auto;
+    cursor: pointer;
     img {
       width: inherit;
       border-radius: 100%;
@@ -41,5 +42,23 @@
 
 .container {
   margin-left: 80px;
-  height: 200px;
+  min-height: 100%;
+}
+
+.infoCard {
+  .avatar {
+    flex: 0 0 80px;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    margin-right: 16px;
+    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
+    img {
+      width: inherit;
+      border-radius: 100%;
+    }
+  }
+  .content {
+    width: 0;
+  }
 }
