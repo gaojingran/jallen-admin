@@ -16,7 +16,13 @@ import {
 import { connect } from "react-redux";
 import withAsync from "$H/withAsync";
 import StickyLayout from "$C/sticky-layout";
-import { stringFormat, convertBase64UrlToFile, messageHandler } from "$U/utils";
+import {
+  stringFormat,
+  convertBase64UrlToFile,
+  messageHandler,
+  getSessionToken,
+  getAjaxPath
+} from "$U/utils";
 import config from "../../config";
 import styles from "./.module.less";
 
@@ -36,8 +42,12 @@ class AccountSetting extends React.Component {
   constructor(props) {
     super(props);
     this.uploader = new Upload.Uploader({
-      action:
-        "https://www.easy-mock.com/mock/5b713974309d0d7d107a74a3/alifd/upload",
+      action: getAjaxPath("updateAvatar"),
+      headers: {
+        Authorization: "Bearer " + getSessionToken()
+      },
+      onProgress: this.uploaderProgress,
+      onError: this.uploaderError,
       onSuccess: this.uploaderSuccess
     });
     this.state = {
@@ -47,8 +57,35 @@ class AccountSetting extends React.Component {
     };
   }
 
+  uploaderProgress = progress => {
+    if (!this.state.loading) {
+      this.setState({ loading: true });
+    }
+  };
+
   uploaderSuccess = value => {
-    console.log(value);
+    if (this.state.loading) {
+      this.setState({ loading: false });
+    }
+    const { code, data } = value;
+    if (code === 0) {
+      this.props.dispatch({
+        type: "user/update",
+        payload: {
+          userInfo: {
+            ...this.props.userInfo,
+            avatar: data
+          }
+        }
+      });
+    }
+  };
+
+  uploaderError = error => {
+    if (this.state.loading) {
+      this.setState({ loading: false });
+    }
+    messageHandler("error", JSON.stringify(error));
   };
 
   onImageSelect = files => {
@@ -194,7 +231,7 @@ class AccountSetting extends React.Component {
                           onSelect={this.onImageSelect}
                         >
                           <img
-                            style={{ width: 100 }}
+                            style={{ width: 100, height: 100 }}
                             src={config.imgPrefix + userInfo.avatar}
                             alt="avatar"
                           />

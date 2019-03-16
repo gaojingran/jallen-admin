@@ -26,6 +26,11 @@ export const getUserAccount = () => {
   );
 };
 
+// 获取ajaxUrl
+export const getAjaxPath = key => {
+  return config.ajxPrefix + config.ajaxAddress[key];
+};
+
 // 退出登录
 export const sysLogout = (history, location) => {
   storage.set(sessionKey.token, null);

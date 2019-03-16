@@ -21,5 +21,6 @@ export default {
     login: "/public/login",
     userInfo: "/api/user-info",
     updateUserInfo: "/api/update-user",
+    updateAvatar: "/api/update-avatar"
   }
 };
