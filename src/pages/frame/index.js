@@ -40,21 +40,28 @@ class Frame extends React.PureComponent {
     sysLogout(history, location);
   };
 
+  goAccountSetting = () => {
+    const { history } = this.props;
+    history.push("/account-setting");
+  };
+
   _avatar = () => {
     const { userInfo } = this.props;
     return (
       <div className={cls([styles.avatar, "mt24", "mb24", "bg-dark"])}>
-        <img src={`${config.qiniuDomain}${userInfo.avatar}`} alt="avatar" />
+        <img src={`${config.imgPrefix}${userInfo.avatar}`} alt="avatar" />
       </div>
     );
   };
 
   render() {
     const { routes, match, location, userInfo } = this.props;
+    // 菜单需要展示的子页面
+    const navRoutes = routes.filter(v => !v.notInNav);
 
     return userInfo.account ? (
       <div className="full bg-dark">
-        <div className={styles.sider}>
+        <div className={cls(styles.sider, "bg-secondary")}>
           <div className={styles.inner} style={{ marginRight: -barWidth }}>
             <Balloon
               align="rt"
@@ -64,7 +71,11 @@ class Frame extends React.PureComponent {
               trigger={this._avatar()}
               style={{ width: 400 }}
             >
-              <UserInfo userInfo={userInfo} handleLogout={this.handleLogout} />
+              <UserInfo
+                userInfo={userInfo}
+                handleLogout={this.handleLogout}
+                handleEdit={this.goAccountSetting}
+              />
             </Balloon>
             <Nav
               className={styles.nav}
@@ -76,7 +87,7 @@ class Frame extends React.PureComponent {
               direction="ver"
               activeDirection="left"
             >
-              {routes.map(v => (
+              {navRoutes.map(v => (
                 <Nav.Item key={v.path} icon={v.icon}>
                   {v.name}
                 </Nav.Item>
@@ -88,8 +99,8 @@ class Frame extends React.PureComponent {
           {routes.map(route => (
             <RouteWithSubRoutes key={route.path} {...route} />
           ))}
-          {routes.length && match.url === location.pathname ? (
-            <Redirect to={routes[0].path} />
+          {navRoutes.length && match.url === location.pathname ? (
+            <Redirect to={navRoutes[0].path} />
           ) : null}
         </div>
       </div>

@@ -1,14 +1,15 @@
 import React from "react";
 import { Button, Icon, Grid } from "@alifd/next";
+import Lottie from "$C/Lottie";
 import config from "../../config";
 import styles from "./.module.less";
 
 const { Row, Col } = Grid;
 
-export default ({ userInfo, handleLogout }) => (
+export default ({ userInfo, handleLogout, handleEdit }) => (
   <div className={styles.infoCard}>
     <Row justify="end">
-      <Button text type="secondary" className="mr16">
+      <Button text type="secondary" className="mr16" onClick={handleEdit}>
         <Icon type="compose" /> 编辑
       </Button>
       <Button text type="secondary" onClick={handleLogout}>
@@ -17,7 +18,10 @@ export default ({ userInfo, handleLogout }) => (
     </Row>
     <Row className="mt8 mb8" align="center">
       <Col className={styles.avatar}>
-        <img alt="avatar" src={`${config.qiniuDomain}${userInfo.avatar}`} />
+        <img alt="avatar" src={`${config.imgPrefix}${userInfo.avatar}`} />
+        <div className={styles.star}>
+          <Lottie name="stars" width={100} height={100} />
+        </div>
       </Col>
       <Col className={styles.content}>
         <h5 className="text-ellipsis mt0 mb0" title={userInfo.nickname}>

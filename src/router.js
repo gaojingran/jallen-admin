@@ -10,6 +10,11 @@ const Login = Loadable({
   loading: Loading,
 });
 
+const AccountSetting = Loadable({
+  loader: () => import('$P/account-setting'),
+  loading: Loading,
+});
+
 export default [
   {
     path: '/login',
@@ -21,6 +26,12 @@ export default [
     name: 'layout',
     component: Frame,
     routes: [
+      {
+        path: '/account-setting',
+        name: '账号设置',
+        notInNav: true,          // 不在菜单按钮上显示
+        component: AccountSetting,
+      },
       {
         path: '/user-list',
         name: '用户列表',

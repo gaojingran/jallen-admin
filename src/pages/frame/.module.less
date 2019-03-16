@@ -4,7 +4,6 @@
   left: 0;
   bottom: 0;
   width: 80px;
-  background-color: #31323d;
   box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   box-sizing: border-box;
@@ -41,6 +40,7 @@
 .container {
   margin-left: 80px;
   min-height: 100%;
+  box-sizing: border-box;
 }
 
 .infoCard {
@@ -51,9 +51,16 @@
     border-radius: 100%;
     margin-right: 16px;
     box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
+    position: relative;
     img {
       width: inherit;
       border-radius: 100%;
+    }
+    .star {
+      position: absolute;
+      top: -56px;
+      left: -32px;
+      transform: rotate(-20deg);
     }
   }
   .content {

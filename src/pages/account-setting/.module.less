@@ -1,0 +1,50 @@
+.card {
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 3px;
+  .avatar {
+    text-align: center;
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s;
+      &:hover {
+        transform: rotate(720deg);
+      }
+    }
+  }
+  .uploadItem {
+    display: inline-block;
+    font-size: 0;
+    & > div {
+      outline: none;
+      position: relative;
+      cursor: pointer;
+      border-radius: 3px;
+      overflow: hidden;
+      &::after {
+        display: block;
+        position: absolute;
+        content: "重新上传";
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        text-align: center;
+        line-height: 100px;
+        font-size: 12px;
+        opacity: 0;
+        transition: all 0.4s;
+      }
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
