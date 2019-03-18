@@ -11,7 +11,8 @@ import {
   Select,
   Upload,
   Dialog,
-  Loading
+  Loading,
+  Field
 } from "@alifd/next";
 import { connect } from "react-redux";
 import withAsync from "$H/withAsync";
@@ -31,6 +32,9 @@ const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: { span: 3 }
 };
+const passwordItemLayout = {
+  labelCol: { span: 4 }
+};
 const mapStateToProps = ({ user }) => ({
   userInfo: user.userInfo
 });
@@ -41,6 +45,7 @@ export default
 class AccountSetting extends React.Component {
   constructor(props) {
     super(props);
+    this.field = new Field(this);
     this.uploader = new Upload.Uploader({
       action: getAjaxPath("updateAvatar"),
       headers: {
@@ -56,6 +61,14 @@ class AccountSetting extends React.Component {
       imgSrc: ""
     };
   }
+
+  checkConfirmPass = (rule, value, callback) => {
+    const { getValue } = this.field;
+    if (value && value !== getValue("newPassword")) {
+      callback("两次密码输入不一致!");
+    }
+    callback();
+  };
 
   uploaderProgress = progress => {
     if (!this.state.loading) {
@@ -142,6 +155,21 @@ class AccountSetting extends React.Component {
             userInfo: data
           }
         });
+      } catch (e) {
+        this.props.ajaxNotify(e);
+      }
+      this.setState({ loading: false });
+    }
+  };
+
+  // 修改密码
+  changePwd = async (value, error) => {
+    if (!error) {
+      try {
+        this.setState({ loading: true });
+        await this.props.ajax("changePwd", value);
+        messageHandler("success", "密码修改成功!");
+        this.field.reset();
       } catch (e) {
         this.props.ajaxNotify(e);
       }
@@ -364,7 +392,75 @@ class AccountSetting extends React.Component {
                     />
                   </Dialog>
                 </Tab.Item>
-                <Tab.Item title="修改密码" key="2" />
+                <Tab.Item title="修改密码" key="2">
+                  <Form
+                    className="mt24"
+                    style={{ width: 500 }}
+                    labelAlign="left"
+                    field={this.field}
+                  >
+                    <FormItem
+                      {...passwordItemLayout}
+                      label="旧密码:"
+                      required
+                      hasFeedback
+                      requiredMessage="请输入密码!"
+                      autoValidate={false}
+                      minLength={6}
+                      maxLength={16}
+                      minmaxLengthMessage="密码长度为6到16位!"
+                    >
+                      <Input
+                        placeholder="请输入密码"
+                        name="password"
+                        htmlType="password"
+                      />
+                    </FormItem>
+                    <FormItem
+                      {...passwordItemLayout}
+                      label="新密码:"
+                      required
+                      hasFeedback
+                      requiredMessage="请输入新密码!"
+                      autoValidate={false}
+                      minLength={6}
+                      maxLength={16}
+                      minmaxLengthMessage="密码长度为6到16位!"
+                    >
+                      <Input
+                        placeholder="请输入新密码"
+                        name="newPassword"
+                        htmlType="password"
+                      />
+                    </FormItem>
+                    <FormItem
+                      {...passwordItemLayout}
+                      label="确认密码:"
+                      required
+                      hasFeedback
+                      requiredMessage="请确认新密码!"
+                      autoValidate={false}
+                      validator={this.checkConfirmPass}
+                    >
+                      <Input
+                        placeholder="请确认新密码"
+                        name="confirm"
+                        htmlType="password"
+                      />
+                    </FormItem>
+                    <FormItem wrapperCol={{ offset: 4 }}>
+                      <Form.Submit
+                        validate
+                        type="primary"
+                        className="mr8"
+                        onClick={this.changePwd}
+                      >
+                        保存
+                      </Form.Submit>
+                      <Form.Reset>重置</Form.Reset>
+                    </FormItem>
+                  </Form>
+                </Tab.Item>
               </Tab>
             </div>
           </Col>
