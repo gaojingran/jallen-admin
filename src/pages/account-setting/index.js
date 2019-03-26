@@ -182,7 +182,7 @@ class AccountSetting extends React.Component {
     const { loading } = this.state;
     return (
       <StickyLayout>
-        <Row gutter={24} wrap style={{ margin: "0 12px" }}>
+        <Row gutter={24} wrap className="pt24" style={{ margin: "0 12px" }}>
           <Col xxs={24} s={24} m={6} className="mb24">
             <div className={cls(styles.card, "bg-secondary")}>
               <div className={styles.avatar}>

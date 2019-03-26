@@ -15,6 +15,11 @@ const AccountSetting = Loadable({
   loading: Loading,
 });
 
+const UserList = Loadable({
+  loader: () => import('$P/user-list'),
+  loading: Loading,
+});
+
 export default [
   {
     path: '/login',
@@ -36,7 +41,7 @@ export default [
         path: '/user-list',
         name: '用户列表',
         icon: 'androidperson',
-        component: () => <div>用户列表</div>
+        component: UserList,
       },
       {
         path: '/article-list',
